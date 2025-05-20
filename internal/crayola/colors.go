@@ -3,8 +3,8 @@ package crayola
 import "math/rand"
 
 var colors = map[string][]string{
-	"red":    {"scarlet", "razmatazz", "infra red", "christmas red", "maroon"},
-	"blue":   {"aqua", "battery charge blue", "blue green", "cerulean", "denim"},
+	"red":    {"scarlet", "razmatazz", "salmon", "raspberry", "maroon"},
+	"blue":   {"aqua", "indigo", "cyan", "cerulean", "denim"},
 	"brown":  {"beaver", "bisque", "bronze", "chestnut", "earthtone"},
 	"green":  {"asparagus", "emerald", "fern", "lime", "inchworm"},
 	"orange": {"apricot", "bittersweet", "clementine", "mango", "peach"},
