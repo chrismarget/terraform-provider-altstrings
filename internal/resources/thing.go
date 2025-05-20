@@ -55,6 +55,8 @@ func (t thingResource) Create(ctx context.Context, req resource.CreateRequest, r
 
 	// Set an ID like we did some actual work here.
 	m.Id = types.StringValue(uuid.New().String())
+
+	resp.Diagnostics.Append(resp.State.Set(ctx, &m)...)
 }
 
 func (t thingResource) Read(ctx context.Context, req resource.ReadRequest, resp *resource.ReadResponse) {
