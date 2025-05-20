@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/chrismarget/terraform-provider-altstrings/customtype"
+	"github.com/chrismarget/terraform-provider-altstrings/internal/customtype"
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 	"github.com/stretchr/testify/require"
 )
