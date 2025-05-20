@@ -3,7 +3,7 @@ package resources
 import (
 	"context"
 
-	"github.com/chrismarget-j/terraform-provider-altstrings/crayola"
+	"github.com/chrismarget-j/terraform-provider-altstrings/internal/crayola"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
