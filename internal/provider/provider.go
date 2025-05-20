@@ -2,8 +2,8 @@ package provider
 
 import (
 	"context"
-	"github.com/chrismarget-j/terraform-provider-altstrings/internal/resources"
 
+	"github.com/chrismarget/terraform-provider-altstrings/internal/resources"
 	"github.com/hashicorp/terraform-plugin-framework/datasource"
 	"github.com/hashicorp/terraform-plugin-framework/provider"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
