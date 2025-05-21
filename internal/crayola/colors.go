@@ -1,30 +1,46 @@
 package crayola
 
-import "math/rand"
+import (
+	"sort"
+)
 
-var colors = map[string][]string{
-	"red":    {"scarlet", "razmatazz", "salmon", "raspberry", "maroon"},
-	"blue":   {"aqua", "indigo", "cyan", "cerulean", "denim"},
-	"brown":  {"beaver", "bisque", "bronze", "chestnut", "earthtone"},
-	"green":  {"asparagus", "emerald", "fern", "lime", "inchworm"},
-	"orange": {"apricot", "bittersweet", "clementine", "mango", "peach"},
-	"purple": {"cerise", "eggplant", "fuchsia", "lavender", "lilac"},
-	"yellow": {"almond", "canary", "cornsilk", "dandelion", "goldenrod"},
+var (
+	colorToHue  map[string]string // populated by func init()
+	hueToColors = map[string][]string{
+		"red":    {"maroon", "salmon", "scarlet", "raspberry", "razmatazz"},
+		"blue":   {"aqua", "cerulean", "cyan", "denim", "indigo"},
+		"brown":  {"beaver", "bisque", "bronze", "chestnut", "earthtone"},
+		"green":  {"asparagus", "emerald", "fern", "inchworm", "lime"},
+		"orange": {"apricot", "bittersweet", "clementine", "mango", "peach"},
+		"purple": {"cerise", "eggplant", "fuchsia", "lavender", "lilac"},
+		"yellow": {"almond", "canary", "cornsilk", "dandelion", "goldenrod"},
+	}
+)
+
+func init() {
+	colorToHue = make(map[string]string)
+	for hue, colors := range hueToColors {
+		colorToHue[hue] = hue
+		for _, color := range colors {
+			colorToHue[color] = hue
+		}
+	}
 }
 
-func BaseColors() []string {
-	result := make([]string, 0, len(colors))
-	for color := range colors {
-		result = append(result, color)
+func ValidColors() []string {
+	result := make([]string, 0, len(colorToHue)+len(hueToColors))
+	for hue, colors := range hueToColors {
+		result = append(result, hue)
+		result = append(result, colors...)
 	}
+	sort.Strings(result)
 	return result
 }
 
-func Synonym(s string) string {
-	family, ok := colors[s]
-	if !ok {
-		return s
-	}
+func Hue(color string) string {
+	return colorToHue[color]
+}
 
-	return family[rand.Intn(len(family))]
+func HueColors(hue string) []string {
+	return hueToColors[hue]
 }

@@ -9,15 +9,15 @@ import (
 	"github.com/hashicorp/terraform-plugin-framework/types/basetypes"
 )
 
-var _ basetypes.StringValuableWithSemanticEquals = (*StringWithAlts1)(nil)
+var _ basetypes.StringValuableWithSemanticEquals = (*StringWithAlts)(nil)
 
-type StringWithAlts1 struct {
+type StringWithAlts struct {
 	basetypes.StringValue
 	altValues []basetypes.StringValue
 }
 
-func (v StringWithAlts1) Equal(o attr.Value) bool {
-	other, ok := o.(StringWithAlts1)
+func (v StringWithAlts) Equal(o attr.Value) bool {
+	other, ok := o.(StringWithAlts)
 	if !ok {
 		return false
 	}
@@ -25,10 +25,10 @@ func (v StringWithAlts1) Equal(o attr.Value) bool {
 	return v.StringValue.Equal(other.StringValue)
 }
 
-func (v StringWithAlts1) StringSemanticEquals(_ context.Context, newValuable basetypes.StringValuable) (bool, diag.Diagnostics) {
+func (v StringWithAlts) StringSemanticEquals(_ context.Context, newValuable basetypes.StringValuable) (bool, diag.Diagnostics) {
 	var diags diag.Diagnostics
 
-	newValue, ok := newValuable.(StringWithAlts1)
+	newValue, ok := newValuable.(StringWithAlts)
 	if !ok {
 		diags.AddError(
 			"Semantic Equality Check Error",
@@ -63,29 +63,29 @@ func (v StringWithAlts1) StringSemanticEquals(_ context.Context, newValuable bas
 	return false, diags
 }
 
-func (v StringWithAlts1) Type(_ context.Context) attr.Type {
-	return StringWithAlts1Type{}
+func (v StringWithAlts) Type(_ context.Context) attr.Type {
+	return StringWithAltsType{}
 }
 
-func NewStringWithAlts1Null() StringWithAlts1 {
-	return StringWithAlts1{
+func NewStringWithAltsNull() StringWithAlts {
+	return StringWithAlts{
 		StringValue: basetypes.NewStringNull(),
 	}
 }
 
-func NewStringWithAlts1Unknown() StringWithAlts1 {
-	return StringWithAlts1{
+func NewStringWithAltsUnknown() StringWithAlts {
+	return StringWithAlts{
 		StringValue: basetypes.NewStringUnknown(),
 	}
 }
 
-func NewStringWithAlts1(s string, alts ...string) StringWithAlts1 {
+func NewStringWithAlts(s string, alts ...string) StringWithAlts {
 	altValues := make([]types.String, len(alts))
 	for i, alt := range alts {
 		altValues[i] = types.StringValue(alt)
 	}
 
-	return StringWithAlts1{
+	return StringWithAlts{
 		StringValue: basetypes.NewStringValue(s),
 		altValues:   altValues,
 	}

@@ -20,15 +20,15 @@ func TestStringWithAltValuesType_ValueFromTerraform(t *testing.T) {
 	}{
 		"true": {
 			in:          tftypes.NewValue(tftypes.String, "foo"),
-			expectation: customtype.NewStringWithAlts1("foo"),
+			expectation: customtype.NewStringWithAlts("foo"),
 		},
 		"unknown": {
 			in:          tftypes.NewValue(tftypes.String, tftypes.UnknownValue),
-			expectation: customtype.NewStringWithAlts1Unknown(),
+			expectation: customtype.NewStringWithAltsUnknown(),
 		},
 		"null": {
 			in:          tftypes.NewValue(tftypes.String, nil),
-			expectation: customtype.NewStringWithAlts1Null(),
+			expectation: customtype.NewStringWithAltsNull(),
 		},
 		"wrongType": {
 			in:          tftypes.NewValue(tftypes.Number, 123),
@@ -41,7 +41,7 @@ func TestStringWithAltValuesType_ValueFromTerraform(t *testing.T) {
 			t.Parallel()
 			ctx := context.Background()
 
-			got, err := customtype.StringWithAlts1Type{}.ValueFromTerraform(ctx, tCase.in)
+			got, err := customtype.StringWithAltsType{}.ValueFromTerraform(ctx, tCase.in)
 			if tCase.expectedErr == "" {
 				require.NoError(t, err)
 			} else {

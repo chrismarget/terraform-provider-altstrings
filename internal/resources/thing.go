@@ -2,8 +2,9 @@ package resources
 
 import (
 	"context"
-
+	"fmt"
 	"github.com/chrismarget/terraform-provider-altstrings/internal/crayola"
+	"github.com/chrismarget/terraform-provider-altstrings/internal/customtype"
 	"github.com/google/uuid"
 	"github.com/hashicorp/terraform-plugin-framework-validators/stringvalidator"
 	"github.com/hashicorp/terraform-plugin-framework/resource"
@@ -15,8 +16,8 @@ import (
 )
 
 type thingModel struct {
-	Id    types.String `tfsdk:"id"`
-	Color types.String `tfsdk:"color"`
+	Id    types.String              `tfsdk:"id"`
+	Color customtype.StringWithAlts `tfsdk:"color"`
 }
 
 type thingResource struct{}
@@ -40,7 +41,8 @@ func (t thingResource) Schema(_ context.Context, _ resource.SchemaRequest, resp 
 			},
 			"color": schema.StringAttribute{
 				Required:   true,
-				Validators: []validator.String{stringvalidator.OneOf(crayola.BaseColors()...)},
+				CustomType: customtype.StringWithAltsType{},
+				Validators: []validator.String{stringvalidator.OneOf(crayola.ValidColors()...)},
 			},
 		},
 	}
@@ -66,8 +68,18 @@ func (t thingResource) Read(ctx context.Context, req resource.ReadRequest, resp 
 		return
 	}
 
-	// "read" a random color synonym to force state churn
-	m.Color = types.StringValue(crayola.Synonym(m.Color.ValueString()))
+	// look up the hue of the previously configured color
+	hue := crayola.Hue(m.Color.ValueString()) // e.g. "red"
+	if hue == "" {
+		resp.Diagnostics.AddError("color lookup failure", fmt.Sprintf("color %q has unknown hue", m.Color.ValueString()))
+	}
+
+	// look up all colors associated with that hue. these are "alt" values with semantic equality
+	colors := crayola.HueColors(hue) // e.g. []string{"crimson", "scarlet", "raspberry"}
+
+	// pretend to have read from the API a hue, but use the custom type with alternate values.
+	// e.g. the API returned "red", but we know that's semantically equal to "crimson", "scarlet", etc...
+	m.Color = customtype.NewStringWithAlts(hue, colors...)
 
 	resp.Diagnostics.Append(resp.State.Set(ctx, &m)...)
 }
